@@ -14,11 +14,11 @@ cap = cv.VideoCapture(0)
 def nothing(x):
     pass
 
-cv.namedWindow('Trackbar')
-cv.createTrackbar("L-H", "Trackbar", 0, 255, nothing)
+cv.namedWindow("Trackbar")
+cv.createTrackbar("L-H", "Trackbar", 0, 179, nothing)
 cv.createTrackbar("L-S", "Trackbar", 0, 255, nothing)
 cv.createTrackbar("L-V", "Trackbar", 0, 255, nothing)
-cv.createTrackbar("U-H", "Trackbar", 255, 255, nothing)
+cv.createTrackbar("U-H", "Trackbar", 179, 179, nothing)
 cv.createTrackbar("U-S", "Trackbar", 255, 255, nothing)
 cv.createTrackbar("U-V", "Trackbar", 255, 255, nothing)
 
@@ -43,6 +43,7 @@ while cap.isOpened():
     # lower_black = np.array([0, 0, 0])  # get the proper values from experimenting with trackbar.
     # upper_black = np.array([255, 255, 50])
     mask = cv.inRange(hsv, lower_black, upper_black)
+    mask = cv.bitwise_not(mask)
 
     cv.rectangle(frame, (5,0), (40,250), (255,255,255), 1)
     cv.rectangle(frame, (43,0), (75,250), (255,255,255), 1)
@@ -71,7 +72,7 @@ while cap.isOpened():
             try:
                 hull = cv.convexHull(contour, returnPoints=False)
                 defects = cv.convexityDefects(contour, hull)
-            except Exception as e:
+            except cv.error as e:
                 print(e)
                 continue
 
